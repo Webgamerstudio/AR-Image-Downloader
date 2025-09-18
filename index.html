@@ -9,55 +9,6 @@
       box-sizing: border-box;
     }
 
-    /* Ad Styles */
-    .ad-container {
-      display: flex;
-      justify-content: center;
-      margin: 15px 0;
-      min-height: 60px;
-    }
-
-    .ad-placeholder {
-      background: rgba(255,255,255,0.1);
-      border-radius: 8px;
-      border: 1px dashed rgba(255,255,255,0.3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: rgba(255,255,255,0.5);
-      font-size: 12px;
-      transition: all 0.3s ease;
-    }
-
-    #top-ad-container {
-      background: rgba(0,0,0,0.1);
-      backdrop-filter: blur(5px);
-    }
-
-    #side-ad-container {
-      margin: 20px 0;
-      position: sticky;
-      top: 20px;
-      z-index: 10;
-    }
-
-    /* Hide ad containers when ads are loaded */
-    .ad-loaded .ad-placeholder {
-      background: transparent;
-      border: none;
-    }
-
-    @media (max-width: 768px) {
-      #side-ad-container {
-        position: relative;
-        top: auto;
-      }
-      
-      .ad-container {
-        margin: 10px 0;
-      }
-    }
-
     body {
       margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -342,11 +293,6 @@
 
   <header>AR Image Downloader</header>
 
-  <!-- Top Banner Ad -->
-  <div id="top-ad-container" class="ad-container">
-    <div id="top-ad" class="ad-placeholder"></div>
-  </div>
-
   <main>
     <div id="home-screen">
       <h2>Welcome to AR Image Downloader</h2>
@@ -369,11 +315,6 @@
         Searching for images...
       </div>
       
-      <!-- Side Ad Container -->
-      <div id="side-ad-container" class="ad-container">
-        <div id="side-ad" class="ad-placeholder"></div>
-      </div>
-      
       <div id="image-grid"></div>
     </div>
   </main>
@@ -386,28 +327,6 @@
   <script>
     const apiKey = "52308689-1eb4cbc98d31bb3a5c0065792";
     
-    // Ad configurations
-    const adConfigs = [
-      {
-        key: '63718988f07bc6d276f3c6a441757cae',
-        width: 728,
-        height: 90,
-        type: 'banner'
-      },
-      {
-        key: 'c620af328467e6de19dc04af696ee0fb',
-        width: 300,
-        height: 250,
-        type: 'rectangle'
-      },
-      {
-        key: '78ade24182729fceea8e45203dad915b',
-        width: 320,
-        height: 50,
-        type: 'mobile'
-      }
-    ];
-    
     const homeScreen = document.getElementById('home-screen');
     const searchContainer = document.getElementById('search-container');
     const searchBox = document.getElementById('search-box');
@@ -417,71 +336,6 @@
     const homeLoading = document.getElementById('home-loading');
     const homeBtn = document.getElementById('home-btn');
     const searchBtn = document.getElementById('search-btn');
-
-    function loadRandomAd(containerId) {
-      const container = document.getElementById(containerId);
-      const placeholder = container.querySelector('.ad-placeholder');
-      
-      // Random selection of ad
-      const randomAd = adConfigs[Math.floor(Math.random() * adConfigs.length)];
-      
-      // Determine if we should show ad (80% chance)
-      const shouldShowAd = Math.random() < 0.8;
-      
-      if (shouldShowAd) {
-        // Set placeholder size
-        placeholder.style.width = randomAd.width + 'px';
-        placeholder.style.height = randomAd.height + 'px';
-        placeholder.style.minHeight = randomAd.height + 'px';
-        
-        // Create ad script
-        const script1 = document.createElement('script');
-        script1.type = 'text/javascript';
-        script1.text = `
-          atOptions = {
-            'key': '${randomAd.key}',
-            'format': 'iframe',
-            'height': ${randomAd.height},
-            'width': ${randomAd.width},
-            'params': {}
-          };
-        `;
-        
-        const script2 = document.createElement('script');
-        script2.type = 'text/javascript';
-        script2.src = `//www.highperformanceformat.com/${randomAd.key}/invoke.js`;
-        
-        // Clear placeholder text and add scripts
-        placeholder.innerHTML = '';
-        placeholder.appendChild(script1);
-        placeholder.appendChild(script2);
-        
-        container.classList.add('ad-loaded');
-        
-        // Fallback if ad doesn't load
-        setTimeout(() => {
-          if (placeholder.children.length <= 2) {
-            placeholder.style.display = 'none';
-            container.style.minHeight = '0';
-          }
-        }, 5000);
-        
-      } else {
-        // Hide ad container if no ad should show
-        container.style.display = 'none';
-      }
-    }
-
-    function initializeAds() {
-      // Load ads after a short delay
-      setTimeout(() => {
-        loadRandomAd('top-ad-container');
-      }, 1000);
-      
-      setTimeout(() => {
-        loadRandomAd('side-ad-container');
-      }, 2000);
-    }
 
     function showHome() {
       homeScreen.style.display = 'flex';
@@ -697,9 +551,6 @@
 
     // Initialize app
     showHome();
-    
-    // Initialize ads
-    initializeAds();
     
     // Test API and load featured images on page load
     testApiKey().then(isWorking => {
